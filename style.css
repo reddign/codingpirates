@@ -1,0 +1,26 @@
+canvas {
+    background: url("background.png");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 95vh;
+    width: 100vh ;
+    margin: 0;
+}
+body {
+    font-family:'Courier New', Courier, monospace;
+    text-align: center;
+}
+
+#board {
+    background-color: black;
+    margin-right: auto;
+    margin-left: auto;
+    
+}
+body{
+   background-color: lightcyan;
+}
