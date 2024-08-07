@@ -79,6 +79,7 @@ function update() {
     requestAnimationFrame(update);
 
     if (gameOver) {
+        showGameOver();
         return;
     }
 
@@ -160,6 +161,7 @@ function update() {
 
 function moveShip(e) {
     if (gameOver) {
+        showGameOver();
         return;
     }
 
@@ -212,4 +214,28 @@ function CollisionDetection(a, b) {
            a.x + a.width > b.x &&  
            a.y < b.y + b.height &&  
            a.y + a.height > b.y;    
+}
+
+function repeat() {
+
+    score = 0;
+    gameOver = false;
+    requestAnimationFrame(update);
+}
+
+function showGameOver(){
+
+
+    context.fillStyle = "black";
+    context.font = "40px Arial";
+    context.fillText("YOU LOSE", 230, 175);
+
+    context.fillStyle = "black";
+    context.fillRect(10, 9, 95, 40);
+
+    context.fillStyle = "white";
+    context.font = "15px Arial";
+    context.fillText("REPEAT", 28, 35);
+
+    document.addEventListener("click",repeat);
 }
