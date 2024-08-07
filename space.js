@@ -217,7 +217,37 @@ function CollisionDetection(a, b) {
 }
 
 function repeat() {
-
+    shipWidth = tileSize*3;
+    shipHeight = tileSize*2;
+    shipX = tileSize * columns/2 - tileSize;
+    shipY = tileSize * rows - tileSize*2;
+    
+    ship = {
+        x : shipX,
+        y : shipY,
+        width : shipWidth,
+        height : shipHeight
+    }
+     backgroundImg;
+    shipImg;
+    shipVelocityX = tileSize; 
+    
+    
+    alienArray = [];
+     alienWidth = tileSize*2;
+     alienHeight = tileSize;
+    alienX = tileSize;
+     alienY = tileSize;
+     alienImg;
+    
+     alienRows = 2;
+     alienColumns = 3;
+     alienCount = 0; 
+     alienspeedX = 1; 
+    
+    
+     bulletArray = [];
+    bulletspeedY = -10; 
     score = 0;
     gameOver = false;
     requestAnimationFrame(update);
