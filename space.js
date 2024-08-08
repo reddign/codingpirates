@@ -243,11 +243,11 @@ function repeat() {
      alienRows = 2;
      alienColumns = 3;
      alienCount = 0; 
-     alienspeedX = 1; 
+    
     
     
      bulletArray = [];
-    bulletspeedY = -10; 
+   
     score = 0;
     gameOver = false;
     requestAnimationFrame(update);

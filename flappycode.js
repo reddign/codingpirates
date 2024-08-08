@@ -160,7 +160,7 @@ function showGameOver() {
     context.fillStyle = "white";
     context.font = "15px Arial";
     context.fillText("REPEAT", 28, 35);
-    
+
     document.removeEventListener("click",repeat);
     document.addEventListener("click",repeat);
 
@@ -170,8 +170,7 @@ function showGameOver() {
 function repeat() {
     bird.x = birdX;
     bird.y = birdY;
-    velocityY = 0;
-    gravity = 0.4;
+    
     pipeArray = [];
     score = 0;
     gameOver = false;
