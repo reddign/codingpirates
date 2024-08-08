@@ -298,7 +298,7 @@ function gameOver(){
     context.font = "40px Arial";
     context.fillText("REPEAT?", canvas.width / 2, canvas.height / 2 + 68);
 
-    // Remove existing click event listeners to avoid multiple triggers
+   
     document.removeEventListener("click", repeat);
     document.addEventListener("click", repeat);
 }
@@ -306,19 +306,20 @@ function gameOver(){
 
 function repeat(){
     playerhp = 5;
-    enemyhp = 500; // Reset enemy health if needed
-    enemyx = 150; // Reset enemy position if needed
-    enemyy = 100; // Reset enemy position if needed
+    enemyhp = 500; 
+    enemyx = 150; 
+    enemyy = 100; 
+     playerx = 350;
+     playery = 600;
+  
 
-    // Optionally reset other game states here if needed
-
-    // Optionally remove the click event listener if it should only be handled once
+   
     document.removeEventListener("click", repeat);
 }
 
 function clearscreen() {
-    context.fillStyle = "black"; // Set the fill color to black
-    context.fillRect(0, 0, canvas.width, canvas.height); // Clear the entire canvas
+    context.fillStyle = "black"; 
+    context.fillRect(0, 0, canvas.width, canvas.height); 
 }
 
 
