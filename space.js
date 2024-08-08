@@ -254,7 +254,10 @@ function repeat() {
 }
 
 function showGameOver() {
-    context.fillStyle = "black";
+    context.fillStyle = "rgba(0, 0, 0, 0.5)";
+    context.fillRect(0, 0, board.width, board.height);
+
+    context.fillStyle = "white";
     context.font = "60px Arial";
     context.textAlign = "center";
     context.fillText("YOU LOSE", board.width / 2, board.height / 2);
