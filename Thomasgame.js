@@ -181,7 +181,7 @@ let down = false;
 let focus = false;
 let shooting = false;
 
-document.addEventListener("keydown", (event) => {
+function keydownHandler(event) {
     switch (event.key) {
         case "ArrowLeft":
             left = true;
@@ -203,7 +203,9 @@ document.addEventListener("keydown", (event) => {
             shooting = true;
             break;
     }
-});
+}
+
+document.addEventListener("keydown", keydownHandler);
 
 document.addEventListener("keyup", (event) => {
     switch (event.key) {
@@ -231,8 +233,6 @@ document.addEventListener("keyup", (event) => {
 });
 
 function playermove() {
-    if (gameOver) return; // Prevent player movement if game is over
-
     let movespeed = focus ? focusSpeed : playerspeed;
 
     if (left) playerx -= movespeed;
@@ -261,8 +261,10 @@ function playermove() {
 //#endregion
 
 // Main game loop, runs every frame
+let isGameOver = false;
+
 function gameloop() {
-    if (gameOver) return;
+    if (isGameOver) return; // Stop game loop if game is over
 
     clearscreen();
 
@@ -286,8 +288,10 @@ function gameloop() {
     }
 }
 
-// Game Over function
+// Handle game over screen
 function gameOver() {
+    isGameOver = true;
+
     context.globalAlpha = 0.5;
     context.fillStyle = "rgba(0, 0, 0, 0.5)";
     context.fillRect(0, 0, canvas.width, canvas.height);
@@ -316,7 +320,7 @@ function retryGame() {
     bulletlist = [];
     playerx = canvas.width / 2;
     playery = canvas.height * 0.8;
-    gameOver = false;
+    isGameOver = false;
     window.addEventListener("keydown", keydownHandler); // Re-add keydown listener
     document.removeEventListener("click", retryGame); // Remove retry listener after click
 }
