@@ -279,6 +279,8 @@ function gameloop() {
 }
 
 function gameOver(){
+    clearscreen(); 
+
     context.globalAlpha = 0.5;
     context.fillStyle = "rgba(0, 0, 0, 0.5)";
     context.fillRect(0, 0, canvas.width, canvas.height);
@@ -296,13 +298,11 @@ function gameOver(){
     context.font = "40px Arial";
     context.fillText("REPEAT?", canvas.width / 2, canvas.height / 2 + 68);
 
-    playerx = 350;
-    playery = 600;
-
     // Remove existing click event listeners to avoid multiple triggers
     document.removeEventListener("click", repeat);
     document.addEventListener("click", repeat);
 }
+
 
 function repeat(){
     playerhp = 5;
@@ -315,6 +315,12 @@ function repeat(){
     // Optionally remove the click event listener if it should only be handled once
     document.removeEventListener("click", repeat);
 }
+
+function clearscreen() {
+    context.fillStyle = "black"; // Set the fill color to black
+    context.fillRect(0, 0, canvas.width, canvas.height); // Clear the entire canvas
+}
+
 
 // Actually handles the looping
 window.setInterval(gameloop, 1000 / FPS);
