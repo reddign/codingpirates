@@ -3,13 +3,22 @@ const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
 let FPS = 60;
 
+// Resize canvas to fit the window
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas(); // Initial resize
+
 //#region Player init
-let playerx = 350;
-let playery = 600;
+let playerx = canvas.width / 2;
+let playery = canvas.height * 0.8;
 let playerspeed = 5;
 let focusSpeed = playerspeed / 2.5;
 
 let playerhp = 5;
+const playerhpmax = 5;
 let playerhitboxsize = 4;
 
 let psloaded = false;
@@ -30,8 +39,8 @@ enemysprite.src = "boss1.png";
 
 let enemyhp = 500;
 const enemyhpmax = 500;
-let enemyx = 150;
-let enemyy = 100;
+let enemyx = canvas.width / 2 - 45;
+let enemyy = canvas.height * 0.1;
 const enemywidth = 90;
 const enemyheight = 70;
 //#endregion
@@ -85,21 +94,23 @@ function clearscreen() {
 function drawUI() {
     context.fillStyle = "white";
     context.font = "22px Times New Roman";
-    context.fillText(`HP: ${playerhp}`, 50, 650);
+    context.fillText(`HP: ${playerhp}`, 50, canvas.height - 20);
 }
 
 function drawHealthBar(pox = 0, poy = 0, amount, amountmax) {
+    const barWidth = canvas.width * 0.3;
     context.fillStyle = "green";
-    context.fillRect(pox, poy, (amount / amountmax) * 100, 15);
+    context.fillRect(pox, poy, (amount / amountmax) * barWidth, 15);
     context.fillStyle = "red";
     context.fillRect(
-        (amount / amountmax) * 100 + pox,
+        pox + (amount / amountmax) * barWidth,
         poy,
-        100 - (amount / amountmax) * 100,
+        barWidth - (amount / amountmax) * barWidth,
         15
     );
 
-    context.fillText(enemyhp, 150, 600);
+    context.fillStyle = "white";
+    context.fillText(`Boss HP: ${enemyhp}`, pox + barWidth + 10, poy + 12);
 }
 //#endregion
 
@@ -154,6 +165,9 @@ function bulletUpdate() {
             bulletlist.splice(i, 1);
             i--;
             playerhp--;
+            if (playerhp <= 0) {
+                gameOver();
+            }
         }
     }
 }
@@ -217,6 +231,8 @@ document.addEventListener("keyup", (event) => {
 });
 
 function playermove() {
+    if (gameOver) return; // Prevent player movement if game is over
+
     let movespeed = focus ? focusSpeed : playerspeed;
 
     if (left) playerx -= movespeed;
@@ -232,18 +248,13 @@ function playermove() {
         }
     }
 
-    playerx = clamp(playerx, 0, canvas.width - playerhitboxsize);
-    playery = clamp(playery, 0, canvas.height - playerhitboxsize);
-}
+    playerx = clamp(playerx, 0, canvas.width - 32);
+    playery = clamp(playery, 0, canvas.height - 36);
 
-function drawPlayer() {
-    if (psloaded) {
-        context.drawImage(playersprite, playerx - 16, playery - 18);
-    }
     if (focus) {
         context.fillStyle = "white";
         context.beginPath();
-        context.arc(playerx, playery, playerhitboxsize, 0, 2 * Math.PI);
+        context.arc(playerx + 16, playery + 18, playerhitboxsize, 0, 2 * Math.PI);
         context.fill();
     }
 }
@@ -251,6 +262,8 @@ function drawPlayer() {
 
 // Main game loop, runs every frame
 function gameloop() {
+    if (gameOver) return;
+
     clearscreen();
 
     if (enemyloaded) {
@@ -262,7 +275,7 @@ function gameloop() {
     pbulletupdate();
     bulletUpdate();
     drawUI();
-    drawHealthBar(100, 660, enemyhp, enemyhpmax);
+    drawHealthBar(50, canvas.height - 50, enemyhp, enemyhpmax);
 
     // Trigger bullet patterns
     if (Math.random() < 0.03) {
@@ -271,6 +284,41 @@ function gameloop() {
     if (Math.random() < 0.01) {
         bulletPatternWave(Math.random() * 360, 10);
     }
+}
+
+// Game Over function
+function gameOver() {
+    context.globalAlpha = 0.5;
+    context.fillStyle = "rgba(0, 0, 0, 0.5)";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.globalAlpha = 1;
+
+    context.fillStyle = "white";
+    context.font = "60px Arial";
+    context.textAlign = "center";
+    context.fillText("YOU LOSE", canvas.width / 2, canvas.height / 2 - 50);
+
+    context.fillStyle = "black";
+    context.fillRect(canvas.width / 2 - 100, canvas.height / 2 + 10, 200, 50);
+
+    context.fillStyle = "white";
+    context.font = "40px Arial";
+    context.fillText("RETRY?", canvas.width / 2, canvas.height / 2 + 40);
+
+    document.addEventListener("click", retryGame);
+    window.removeEventListener("keydown", keydownHandler); // Remove keydown listener to prevent new inputs
+}
+
+function retryGame() {
+    playerhp = playerhpmax;
+    enemyhp = enemyhpmax;
+    pbullets = [];
+    bulletlist = [];
+    playerx = canvas.width / 2;
+    playery = canvas.height * 0.8;
+    gameOver = false;
+    window.addEventListener("keydown", keydownHandler); // Re-add keydown listener
+    document.removeEventListener("click", retryGame); // Remove retry listener after click
 }
 
 // Actually handles the looping
