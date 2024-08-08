@@ -254,7 +254,7 @@ function repeat() {
 }
 
 function showGameOver() {
-    context.fillStyle = "rgba(0, 0, 0, 0.5)";
+    context.fillStyle = "rgba(0, 0, 0, 0.7)";
     context.fillRect(0, 0, board.width, board.height);
 
     context.fillStyle = "white";
@@ -271,3 +271,4 @@ function showGameOver() {
 
     document.addEventListener("click", repeat);
 }
+
