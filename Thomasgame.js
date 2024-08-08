@@ -1,303 +1,277 @@
-
-//important inits
+// Important inits
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
 let FPS = 60;
 
+//#region Player init
+let playerx = 350;
+let playery = 600;
+let playerspeed = 5;
+let focusSpeed = playerspeed / 2.5;
 
-//#region player init
-    let playerx = 350
-    let playery = 600
-    let playerspeed = 5
+let playerhp = 5;
+let playerhitboxsize = 4;
 
-    let playerhp = 5
-
-    let psloaded = false
-    const playersprite = new Image()
-    playersprite.addEventListener("load",() => {
-        psloaded = true
-    })
-    playersprite.src = "player.png"
-    
+let psloaded = false;
+const playersprite = new Image();
+playersprite.addEventListener("load", () => {
+    psloaded = true;
+});
+playersprite.src = "player.png";
 //#endregion
 
-//#region enemy init
+//#region Enemy init
+let enemyloaded = false;
+const enemysprite = new Image();
+enemysprite.addEventListener("load", () => {
+    enemyloaded = true;
+});
+enemysprite.src = "boss1.png";
 
-let enemyloaded = false
-const enemysprite = new Image()
-enemysprite.addEventListener("load",() => {
-    enemyloaded = true
-})
-enemysprite.src = "boss1.png"
-
-let enemyhp = 100
-let enemyhpmax = 100
-let enemyx = 150
-let enemyy = 100
-let enemywidth = 90
-let enemyheight=70
+let enemyhp = 500;
+const enemyhpmax = 500;
+let enemyx = 150;
+let enemyy = 100;
+const enemywidth = 90;
+const enemyheight = 70;
 //#endregion
 
+//#region Player bullet code
+let pbfirerate = 5;
+let pbtimer = pbfirerate;
+const pbspeed = 12;
+let pbullets = [];
 
+function pbulletupdate() {
+    for (let i = 0; i < pbullets.length; i++) {
+        let curBull = pbullets[i];
+        curBull[1] -= pbspeed;
 
-//#region player bullet code
-    pbfirerate = 5
-    pbtimer = pbfirerate
-    pbspeed = 12
-    pbullets = [
-        /*
-        [
-            0,//x
-            0,//y
-        ]
-        */
-    ]
+        context.fillStyle = "blue";
+        context.fillRect(curBull[0], curBull[1], 5, 10);
 
-    function pbulletupdate(){
-        for(let i = 0;i < pbullets.length;i++){
-            let curBull = pbullets[i]
-            curBull[1] -= pbspeed
+        let inx = curBull[0] + 5 > enemyx && curBull[0] < enemyx + enemywidth;
+        let iny = curBull[1] + 10 > enemyy && curBull[1] < enemyy + enemyheight;
 
-            context.fillStyle="blue"
-            context.fillRect(curBull[0],curBull[1],5,10)
-            let inx = false
-            let iny = false
-            if(curBull[0]+5 > enemyx && curBull[0] < enemyx+enemywidth){
-                inx = true
-            }
-            if(curBull[1]+10> enemyy && curBull[1] < enemyy+enemyheight){
-                iny = true
-            }
-
-            if(inx && iny){
-                enemyhp--
-                pbullets.splice(i,1)
-                i--
-            }
+        if (inx && iny) {
+            enemyhp--;
+            pbullets.splice(i, 1);
+            i--;
         }
     }
+}
 //#endregion
 
-
-//#region utility functions
-    function repeat(num = 0,func){
-        for(let i = 0; i < num;i++){
-            func()
-        }
-    }
-
-    function clamp(num,lower,upper){
-        if(upper > lower){
-            if(num < lower){
-                num = lower
-            }
-            if(num > upper){
-                num = upper
-            }
-        }
-        return num
-    }
-
-    function dtr(d){//stands for Degrees To Radians
-        let radians = (d * Math.PI) /180
-        return radians
-    }
-
-    function calcXAndYSpeed(angle,speed){
-            let xspeed= speed*Math.cos(dtr(angle))
-            let yspeed= speed*Math.sin(dtr(angle))
-            return [xspeed,yspeed]
-    }
-
-    function clearscreen(){
-        context.fillStyle = 'black'; 
-        context.fillRect(0,0,canvas.width,canvas.height);
-    }
-
-    function drawUI(){
-        context.fillStyle = "white"
-        context.font = "22px Times New Roman"
-        context.fillText(`HP: ${playerhp}`,50,650)
-    }
-
-    function drawHealthBar(pox=0,poy=0,amount,amountmax){
-        context.fillStyle = "green"
-        context.fillRect(pox,poy,amount/amountmax*100,15)
-        context.fillStyle = "red"
-        context.fillRect(amount/amountmax*100+pox,poy,pox+(amountmax-amount)-100,15)
-
-        context.fillText(enemyhp,150,600)
-    }
-
-//#endregion
-
-
-//#region enemy bullet code
-
-    let bulletlist =[
-
-        [
-            /*
-            100,//x             0
-            15,//y              1
-            0,//xspeed          2
-            0,//yspeed          3
-            1,//speed           4
-            0,//true angle      5
-            15,//size           6
-            */
-        ]
-        
-    ]
-
-    function bulletPattern1(tilt=0){
-        let dang = tilt
-        for(let i = 0;i<15;i++){
-            CreateBullet(100,100,dang,2,30)
-            dang+=15
-        }
-    }
-
-    function CreateBullet(x=100,y=100,angle,spd=1,size=15){
-        let bigshot = calcXAndYSpeed(angle,spd)
-        bulletlist.push([x,y,bigshot[0],bigshot[1],spd,angle,size])
-    }
-
-    function bulletUpdate(){
-        for(let i = 0;i<bulletlist.length;i++){
-            let curBull = bulletlist[i]
-            curBull[0] += curBull[2]
-            curBull[1] += curBull[3]
-
-            context.fillStyle = "red"
-            
-            let inx = false
-            let iny = false
-            if(curBull[0]+curBull[6] > playerx && curBull[0] < playerx+32){
-                inx = true
-            }
-            if(curBull[1]+curBull[6]> playery && curBull[1] < playery+36){
-                iny = true
-            }
-            context.fillRect(curBull[0],curBull[1],curBull[6],curBull[6])
-        
-
-            if(curBull[0] > canvas.width || curBull[0] < 0-30 || curBull[1] < 0 || curBull[1] > canvas.height+30){
-                bulletlist.splice(i,1)
-                i--
-            }//removes from list
-
-            if(inx && iny){
-                bulletlist.splice(i,1)
-                i--
-                playerhp--
-            }
-        }
-    }
-
-//#endregion
-
-
-
-//#region movement and player input reader
-    let left = false
-    let right = false
-    let up = false
-    let down = false
-    let slowmode = false
-    let shooting = false
-    document.addEventListener(//on key down
-
-        "keydown", (event) => {
-            if(event.key == "ArrowLeft"){
-                left = true
-            }
-            if(event.key == "ArrowRight"){
-                right = true
-            }
-            if(event.key == "ArrowUp"){
-                up = true
-            }
-            if(event.key == "ArrowDown"){
-                down = true
-            }
-            if(event.key == "Shift"){
-                slowmode = true
-            }
-            if(event.key.toLowerCase() == "z"){
-                shooting = true
-            }
-        }
-    )
-    document.addEventListener(//on key release
-        "keyup", (event) => {
-            if(event.key == "ArrowLeft"){
-                left = false
-            }
-            if(event.key == "ArrowRight"){
-                right = false
-            }
-            if(event.key == "ArrowUp"){
-                up = false
-            }
-            if(event.key == "ArrowDown"){
-                down = false
-            }
-            if(event.key == "Shift"){
-                slowmode = false
-            }
-            if(event.key.toLowerCase() == "z"){
-                shooting = false
-                pbtimer = pbfirerate
-            }
-        }
-    )
-    function playermove(){
-        let movespeed = playerspeed
-        if(slowmode){
-            movespeed/=2.5
-        }
-        if(left){
-            playerx-=movespeed
-        }
-        if(right){
-            playerx+=movespeed
-        }
-        if(up){
-            playery-=movespeed
-        }
-        if(down){
-            playery+=movespeed
-        }
-        if(shooting){
-            pbtimer--
-            if(pbtimer == 0){
-                pbtimer = pbfirerate
-                pbullets.push([playerx+11,playery])
-            }
-        }
-    }
-//#endregion
-
-
-
-//main game loop, runs every frame
-function gameloop(){
-    clearscreen()
-    if(psloaded){
-        context.drawImage(playersprite,playerx,playery)
-    }
-    if(enemyloaded){
-        
-            context.drawImage(enemysprite,enemyx,enemyy)
-        
-    }
-    playermove()
-    pbulletupdate()
-    bulletUpdate()
-    drawUI()
-    drawHealthBar(100,660,enemyhp,enemyhpmax)
+//#region Utility functions
+function clamp(num, lower, upper) {
+    return Math.max(lower, Math.min(num, upper));
 }
 
-//actually handles the looping
-window.setInterval(gameloop,1000/FPS);
+function dtr(d) {
+    return (d * Math.PI) / 180;
+}
+
+function calcXAndYSpeed(angle, speed) {
+    let xspeed = speed * Math.cos(dtr(angle));
+    let yspeed = speed * Math.sin(dtr(angle));
+    return [xspeed, yspeed];
+}
+
+function clearscreen() {
+    context.fillStyle = "black";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+function drawUI() {
+    context.fillStyle = "white";
+    context.font = "22px Times New Roman";
+    context.fillText(`HP: ${playerhp}`, 50, 650);
+}
+
+function drawHealthBar(pox = 0, poy = 0, amount, amountmax) {
+    context.fillStyle = "green";
+    context.fillRect(pox, poy, (amount / amountmax) * 100, 15);
+    context.fillStyle = "red";
+    context.fillRect(
+        (amount / amountmax) * 100 + pox,
+        poy,
+        100 - (amount / amountmax) * 100,
+        15
+    );
+
+    context.fillText(enemyhp, 150, 600);
+}
+//#endregion
+
+//#region Enemy bullet code
+let bulletlist = [];
+
+function bulletPatternSpiral(tilt = 0, count = 36) {
+    let dang = tilt;
+    for (let i = 0; i < count; i++) {
+        CreateBullet(enemyx + enemywidth / 2, enemyy + enemyheight / 2, dang, 2, 8);
+        dang += 360 / count;
+    }
+}
+
+function bulletPatternWave(tilt = 0, count = 10) {
+    let dang = tilt;
+    for (let i = 0; i < count; i++) {
+        CreateBullet(enemyx + i * 10, enemyy, 90, 4, 8);
+    }
+}
+
+function CreateBullet(x = 100, y = 100, angle, spd = 1, size = 8) {
+    let [xspeed, yspeed] = calcXAndYSpeed(angle, spd);
+    bulletlist.push([x, y, xspeed, yspeed, spd, angle, size]);
+}
+
+function bulletUpdate() {
+    for (let i = 0; i < bulletlist.length; i++) {
+        let curBull = bulletlist[i];
+        curBull[0] += curBull[2];
+        curBull[1] += curBull[3];
+
+        context.fillStyle = "red";
+        context.beginPath();
+        context.arc(curBull[0], curBull[1], curBull[6] / 2, 0, 2 * Math.PI);
+        context.fill();
+
+        let inx = curBull[0] > playerx && curBull[0] < playerx + playerhitboxsize;
+        let iny = curBull[1] > playery && curBull[1] < playery + playerhitboxsize;
+
+        if (
+            curBull[0] > canvas.width ||
+            curBull[0] < -curBull[6] ||
+            curBull[1] < -curBull[6] ||
+            curBull[1] > canvas.height + curBull[6]
+        ) {
+            bulletlist.splice(i, 1);
+            i--;
+        }
+
+        if (inx && iny) {
+            bulletlist.splice(i, 1);
+            i--;
+            playerhp--;
+        }
+    }
+}
+//#endregion
+
+//#region Movement and player input reader
+let left = false;
+let right = false;
+let up = false;
+let down = false;
+let focus = false;
+let shooting = false;
+
+document.addEventListener("keydown", (event) => {
+    switch (event.key) {
+        case "ArrowLeft":
+            left = true;
+            break;
+        case "ArrowRight":
+            right = true;
+            break;
+        case "ArrowUp":
+            up = true;
+            break;
+        case "ArrowDown":
+            down = true;
+            break;
+        case "Shift":
+            focus = true;
+            break;
+        case "z":
+        case "Z":
+            shooting = true;
+            break;
+    }
+});
+
+document.addEventListener("keyup", (event) => {
+    switch (event.key) {
+        case "ArrowLeft":
+            left = false;
+            break;
+        case "ArrowRight":
+            right = false;
+            break;
+        case "ArrowUp":
+            up = false;
+            break;
+        case "ArrowDown":
+            down = false;
+            break;
+        case "Shift":
+            focus = false;
+            break;
+        case "z":
+        case "Z":
+            shooting = false;
+            pbtimer = pbfirerate;
+            break;
+    }
+});
+
+function playermove() {
+    let movespeed = focus ? focusSpeed : playerspeed;
+
+    if (left) playerx -= movespeed;
+    if (right) playerx += movespeed;
+    if (up) playery -= movespeed;
+    if (down) playery += movespeed;
+
+    if (shooting) {
+        pbtimer--;
+        if (pbtimer === 0) {
+            pbtimer = pbfirerate;
+            pbullets.push([playerx + 11, playery]);
+        }
+    }
+
+    playerx = clamp(playerx, 0, canvas.width - playerhitboxsize);
+    playery = clamp(playery, 0, canvas.height - playerhitboxsize);
+}
+
+function drawPlayer() {
+    if (psloaded) {
+        context.drawImage(playersprite, playerx - 16, playery - 18);
+    }
+    if (focus) {
+        context.fillStyle = "white";
+        context.beginPath();
+        context.arc(playerx, playery, playerhitboxsize, 0, 2 * Math.PI);
+        context.fill();
+    }
+}
+//#endregion
+
+// Main game loop, runs every frame
+function gameloop() {
+    clearscreen();
+
+    if (enemyloaded) {
+        context.drawImage(enemysprite, enemyx, enemyy);
+    }
+
+    drawPlayer();
+    playermove();
+    pbulletupdate();
+    bulletUpdate();
+    drawUI();
+    drawHealthBar(100, 660, enemyhp, enemyhpmax);
+
+    // Trigger bullet patterns
+    if (Math.random() < 0.03) {
+        bulletPatternSpiral(Math.random() * 360, 36);
+    }
+    if (Math.random() < 0.01) {
+        bulletPatternWave(Math.random() * 360, 10);
+    }
+}
+
+// Actually handles the looping
+window.setInterval(gameloop, 1000 / FPS);
