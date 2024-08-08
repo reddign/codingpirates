@@ -85,7 +85,7 @@ function clearscreen() {
 function drawUI() {
     context.fillStyle = "white";
     context.font = "22px Times New Roman";
-    context.fillText(`HP: ${playerhp}`, 50, 650);
+    context.fillText(`HP: ${playerhp}`, 50, 645);
 }
 
 function drawHealthBar(pox = 0, poy = 0, amount, amountmax) {
