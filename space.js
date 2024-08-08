@@ -270,7 +270,7 @@ function showGameOver() {
 
     context.fillStyle = "white";
     context.font = "40px Arial";
-    context.fillText("REPEAT", board.width / 2, board.height / 2 + 68);
+    context.fillText("REPEAT?", board.width / 2, board.height / 2 + 68);
 
     document.addEventListener("click", repeat);
 }
