@@ -272,7 +272,10 @@ function gameloop() {
         bulletPatternWave(Math.random() * 360, 10);
     }
 }
-
+if (playerhp = 0){
+    gameOver();
+    return;
+}
 
 
 function gameOver(){
