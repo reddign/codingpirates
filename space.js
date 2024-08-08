@@ -253,19 +253,18 @@ function repeat() {
     requestAnimationFrame(update);
 }
 
-function showGameOver(){
-
+function showGameOver() {
+    context.fillStyle = "black";
+    context.font = "60px Arial";
+    context.textAlign = "center";
+    context.fillText("YOU LOSE", board.width / 2, board.height / 2);
 
     context.fillStyle = "black";
-    context.font = "40px Arial";
-    context.fillText("YOU LOSE", 230, 175);
-
-    context.fillStyle = "black";
-    context.fillRect(10, 9, 95, 40);
+    context.fillRect(board.width / 2 - 100, board.height / 2 + 30, 200, 50);
 
     context.fillStyle = "white";
-    context.font = "45px Arial";
-    context.fillText("REPEAT", 28, 35);
+    context.font = "40px Arial";
+    context.fillText("REPEAT", board.width / 2, board.height / 2 + 68);
 
-    document.addEventListener("click",repeat);
+    document.addEventListener("click", repeat);
 }
