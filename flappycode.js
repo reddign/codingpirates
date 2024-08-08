@@ -160,7 +160,8 @@ function showGameOver() {
     context.fillStyle = "white";
     context.font = "15px Arial";
     context.fillText("REPEAT", 28, 35);
-
+    
+    document.removeEventListener("click",repeat);
     document.addEventListener("click",repeat);
 
     
