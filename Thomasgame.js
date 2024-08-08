@@ -296,6 +296,9 @@ function gameOver(){
     context.font = "40px Arial";
     context.fillText("REPEAT?", canvas.width / 2, canvas.height / 2 + 68);
 
+    playerx = 350;
+    playery = 600;
+
     // Remove existing click event listeners to avoid multiple triggers
     document.removeEventListener("click", repeat);
     document.addEventListener("click", repeat);
