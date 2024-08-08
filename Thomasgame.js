@@ -257,6 +257,11 @@ function gameloop() {
         context.drawImage(enemysprite, enemyx, enemyy);
     }
 
+    if (playerhp <= 0) {
+        gameOver();
+        return; // Stop the game loop if the game is over
+    }
+
     drawPlayer();
     playermove();
     pbulletupdate();
@@ -273,31 +278,39 @@ function gameloop() {
     }
 }
 
-
-
 function gameOver(){
     context.globalAlpha = 0.5;
     context.fillStyle = "rgba(0, 0, 0, 0.5)";
-    context.fillRect(0, 0, board.width, board.height);
-    context.globalAlpha = 0.5;
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.globalAlpha = 1.0;
 
     context.fillStyle = "white";
     context.font = "60px Arial";
     context.textAlign = "center";
-    context.fillText("YOU LOSE", boardWidth / 2, board.height / 2);
+    context.fillText("YOU LOSE", canvas.width / 2, canvas.height / 2);
 
     context.fillStyle = "black";
-    context.fillRect(board.width / 2 - 100, board.height / 2 + 30, 200, 50);
+    context.fillRect(canvas.width / 2 - 100, canvas.height / 2 + 30, 200, 50);
 
     context.fillStyle = "white";
     context.font = "40px Arial";
-    context.fillText("REPEAT?", boardWidth / 2, boardHeight / 2 + 68);
+    context.fillText("REPEAT?", canvas.width / 2, canvas.height / 2 + 68);
 
+    // Remove existing click event listeners to avoid multiple triggers
+    document.removeEventListener("click", repeat);
     document.addEventListener("click", repeat);
 }
 
 function repeat(){
     playerhp = 5;
+    enemyhp = 500; // Reset enemy health if needed
+    enemyx = 150; // Reset enemy position if needed
+    enemyy = 100; // Reset enemy position if needed
+
+    // Optionally reset other game states here if needed
+
+    // Optionally remove the click event listener if it should only be handled once
+    document.removeEventListener("click", repeat);
 }
 
 // Actually handles the looping
