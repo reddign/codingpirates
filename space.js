@@ -257,8 +257,8 @@ function showGameOver() {
   
     context.globalAlpha = 0.5;
     context.fillStyle = "rgba(0, 0, 0, 0.5)";
-    context.fillRect(0, 0, 900, 600);
-    context.globalAlpha = 1.0;
+    context.fillRect(0, 0, board.width, board.height);
+    context.globalAlpha = 0.5;
 
     context.fillStyle = "white";
     context.font = "60px Arial";
