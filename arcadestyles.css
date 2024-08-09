@@ -1,0 +1,132 @@
+body {
+    font-family: 'Press Start 2P', cursive;
+    background-color: #000;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 90%;
+    margin: 0 auto;
+}
+
+header {
+    background: #222;
+    color: #ffcc00;
+    padding: 20px 0;
+    text-align: center;
+    border-bottom: 5px solid #ffcc00;
+}
+
+header h1 {
+    font-size: 3em;
+    margin: 0;
+}
+
+main {
+    padding: 20px 0;
+}
+
+.games-list {
+    padding: 40px 0;
+    text-align: center;
+}
+
+.games-list h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    justify-items: center;
+}
+
+.game-item {
+    text-decoration: none;
+    color: #fff;
+    background: #222;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s, background-color 0.3s;
+}
+
+.game-item:hover {
+    transform: scale(1.05);
+    background-color: #ffcc00;
+    color: #222;
+}
+
+.arcade-icon {
+    width: 80px;
+    height: 120px;
+    background: #000;
+    border: 2px solid #ffcc00;
+    border-radius: 5px;
+    position: relative;
+    margin: 0 auto 10px;
+}
+
+.screen {
+    width: 60px;
+    height: 80px;
+    background: #222;
+    border: 2px solid #ffcc00;
+    margin: 10px auto;
+    position: relative;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.button {
+    width: 10px;
+    height: 10px;
+    background: #ffcc00;
+    border: 2px solid #000;
+    border-radius: 50%;
+}
+
+footer {
+    background: #222;
+    color: #ffcc00;
+    padding: 20px 0;
+    text-align: center;
+}
+
+footer p {
+    margin: 0;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: #ffcc00;
+    text-decoration: none;
+    font-size: 1.2em;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: #000000;
+}
