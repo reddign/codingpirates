@@ -170,6 +170,11 @@ function showGameOver() {
 function repeat() {
     birdX = boardWidth / 8;
     birdY = boardHeight / 2;
+
+
+    velocityX = 0;
+    velocityY = 0;
+    gravity = 0.4;
     
     pipeArray = [];
     score = 0;
