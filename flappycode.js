@@ -154,7 +154,7 @@ function showGameOver() {
     context.font = "40px Arial";
     context.fillText("YOU LOSE", 230, 175);
 
-    context.fillStyle = "black";
+    context.fillStyle = "black"; 
     context.fillRect(10, 9, 95, 40);
 
     context.fillStyle = "white";
@@ -168,8 +168,8 @@ function showGameOver() {
 }
 
 function repeat() {
-    bird.x = birdX;
-    bird.y = birdY;
+    birdX = boardWidth / 8;
+    birdY = boardHeight / 2;
     
     pipeArray = [];
     score = 0;
